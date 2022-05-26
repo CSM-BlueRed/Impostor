@@ -47,7 +47,7 @@ Interpreter(b'QZZ~{Rz*fmQEWy?QC4h4QB^TRRaIm{S5;C%R8>k+QZPnZQbk5iQEWy?QC4h4QB^TRR
 <br>
 
 ## <p align="left">⭐・Repository・⭐</p>
-If you like this repository, **star it** ! And if you want to share your opignon, please go to the **repository discussion**. 
+If you like this repository, **star it** ! And if you want to share your opinion, please go to the **repository discussion**. 
 
 <br>
 
