@@ -2,7 +2,7 @@ import sys
 import os
 
 from pystyle import *
-import marshal
+import marshal as marshal
 import base64
 import random
 
@@ -25,16 +25,11 @@ class Impostor():
     }
     gatewayKey = random.randint(0, 10000)
     def Gateway() -> str:
-        _globals = globals()['__globals']
         obj = globals()['__selfObject__']
         interpreterObj = globals()['__InterpreterObject__']
-        module = globals()['__module']
         key = globals()['__key__']
         code = interpreterObj.code['bytes']
-        def send_(*args):
-            for arg in args: exec(arg)
         obj.executed = True
-        __import__('builtins').send = send_
         return ((key * 8 / 1.5), code)
     comment = 'Obfuscated with Impostor'
     encCommend = ' + '.join(f'chr({char})' for char in [ord(char_) for char_ in comment])
@@ -44,7 +39,7 @@ class Impostor():
 class Interpreter():
   def __init__(self, code: str, layersFunction: bytes, module, globals_, backend: bytes = b'') -> None: self.__module = module;self.layersFunction = layersFunction;self.__globals = globals_;self.code = {'bytes': code, 'str': str(code)}; self.__backend = backend
   def __tunnel(self) -> Gateway: return Gateway(self.__backend, GATEWAYKEY, __module = self.__module, __globals = self.__globals, interpreter = self)
-  def Run(self) -> None: decoder = self.__getobject__(); gate = self.__tunnel().Pass();exec(eval(MARSHALMODULE.loads(decoder), {'__selfObject__': self, '__module': self.__module, '__sr_m': MARSHALMODULE, '__globals': self.__globals, 'gate': gate}))
+  def Run(self) -> None: decoder = self.__getobject__(); gate = self.__tunnel().Pass();exec(eval(MARSHALMODULE.loads(decoder), {'__selfObject__': self, '__module': self.__module, '__sr_m': MARSHALMODULE, '__globals': self.__globals, 'gate': gate}), self.__globals)
   def __getobject__(self) -> object: func = self.layersFunction; return self.__module.b64decode(func)
 """[1:-1].replace('MARSHALMODULE', Alt('__import__("marshal")')).replace('GATEWAYKEY', str(gatewayKey))
 
@@ -66,15 +61,15 @@ class Gateway():
         code = module.b16decode(code)
         code = globals()['__sr_m'].loads(code)
         return code
-        
 
     def Obfuscate(code: str) -> str:
         sys.setrecursionlimit(1000000)
 
         _code = code
+        program = r"{'__name__': '__main__'}"
         runCode = f"""
 if not ({Impostor.checkInfos}): {Impostor.exceptionCode}
-{_code}
+exec({_code!r}, {program})
 """[1:-1]
 
         code__ = Impostor.serializer.dumps(compile(runCode, 'Impostor', 'exec'))
@@ -133,13 +128,13 @@ def Main():
     if not os.path.isfile(path):
         Colorate.Error('Not a file.')
         return
+    Write.Input('[!] WARN: The __name__ variable will be set to "__main__". Press Enter to continue...', Col.DynamicMIX([Col.orange, Col.yellow]), interval)
     with open(path, 'r', encoding = 'utf-8') as file:
         code = file.read()
     code = Impostor.Obfuscate(code)
     filename = os.path.basename(path).removesuffix('.py')
     with open(filename + '-Impostor.py', 'a+', encoding = 'utf-8') as file:
         file.write(code)
-    symbol = Col.Symbol('!', Col.green, Col.white)
     Write.Print(f'[!] Successfully obfuscated !', Col.green, interval)
     input()
 
